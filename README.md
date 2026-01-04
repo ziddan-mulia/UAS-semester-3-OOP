@@ -97,33 +97,31 @@ flask_azidmart_api/
 
 1. **Clone repository:**
 
-```bash
+````bash
 git clone https://github.com/username/flask_azidmart_api.git
 cd flask_azidmart_api
-Buat virtual environment (recommended):
 
-bash
+2.Buat virtual environment (recommended):
 # Windows
 python -m venv venv
 venv\Scripts\activate
-
 # Mac/Linux
 python3 -m venv venv
 source venv/bin/activate
-Install dependencies:
 
-bash
+3. Install dependencies:
 pip install -r requirements.txt
-Jalankan aplikasi:
 
-bash
+4. Jalankan aplikasi:
 python app.py
-Buka browser:
 
-text
+5. Buka browser:
 http://localhost:5000
+
+
 📡 API Endpoints yang Digunakan
 AZIDMart menggunakan DummyJSON API dengan endpoint berikut:
+
 Endpoint	Method	Deskripsi
 /products	GET	Semua produk (100 items)
 /products/{id}	GET	Detail produk by ID
@@ -131,32 +129,36 @@ Endpoint	Method	Deskripsi
 /products/category/{name}	GET	Produk berdasarkan kategori
 /products/search?q={query}	GET	Pencarian produk
 
-🎯 Fitur Implementasi Teknis
+
 1. Flask Routing System
-python
 @app.route('/products')
 def products():
     # Filter produk berdasarkan kategori & search
     category = request.args.get('category', 'all')
     search = request.args.get('search', '')
     # ... filter logic
+
 2. Dynamic Filtering
 Filter by kategori (electronics, fashion, home, dll)
 Real-time search dengan keyword matching
 URL parameter handling untuk bookmarkable filters
 
 3. Currency Conversion
-python
 # Konversi USD → IDR (1 USD = Rp 15.000)
 product['price_idr'] = product['price'] * 15000
 
-4. Template Inheritance
-html
+ 4. Inheritance
+```html
 <!-- base.html -->
-{% block content %}{% endblock %}
+<div class="content">
+    {{ content }}
+</div>
+
 <!-- products.html -->
-{% extends "base.html" %}
-{% block content %}...{% endblock %}
+<!-- Menggunakan extends untuk template inheritance -->
+<div class="products-page">
+    <!-- konten produk -->
+</div>
 
 5. Error Handling
 Graceful degradation jika API down
@@ -183,7 +185,6 @@ Typography:
 Headings: Segoe UI / Montserrat
 Body: Segoe UI / Open Sans
 Monospace: Consolas (code snippets)
-
 Animations:
 CSS3 transitions & transforms
 Hover effects pada product cards
@@ -200,12 +201,13 @@ Global styles di base.html block extra_css
 Page-specific styles di masing-masing template
 Gunakan Bootstrap utility classes untuk rapid styling
 
+
 Debugging:
 # Enable debug mode
 app.run(debug=True)
-
 # Check logs di terminal
 # Flask akan show error details
+
 🤝 Kontribusi
 Project ini dibuat untuk tujuan akademik (UAS Web OOP). Untuk kontribusi:
 Fork repository
@@ -224,8 +226,6 @@ Semester: Ganjil
 
 📄 License
 Project ini dilisensikan di bawah MIT License - lihat file LICENSE untuk detail.
-
-text
 MIT License
 
 Copyright (c) 2025 AZIDMart Team
@@ -237,6 +237,7 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 ...
+
 🙏 Acknowledgements
 DummyJSON - Untuk API produk gratis yang realistis
 Flask Documentation - Dokumentasi framework yang excellent
@@ -260,24 +261,22 @@ Q: Bisa ditambah payment gateway?
 A: Ya, architecture siap untuk integrasi lebih lanjut.
 
 ⭐ Jika project ini membantu, beri star di GitHub!
-
 Happy Coding! 🚀
-# AZIDMart - E-commerce Flask
 
-## 🎯 Overview
-- Flask + Bootstrap + DummyJSON API
-- 100+ produk real-time
-- Filter & search system
-- Responsive design
+🎯 Overview
+Flask + Bootstrap + DummyJSON API
+100+ produk real-time
+Filter & search system
+Responsive design
 
-## 🚀 Quick Start
+🚀 Quick Start
 git clone [repo]
 cd flask_azidmart_api
 pip install -r requirements.txt
 python app.py
+
 📞 Contact
 Email: team@azidmart.dev
 GitHub: https://github.com/Zeppinhere30
         https://github.com/ziddan-mulia
-
-```
+````
