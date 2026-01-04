@@ -1,0 +1,97 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}AZIDMart{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .azidmart-brand {
+        color: #1e3c72;
+        font-weight: 800;
+        font-size: 1.5rem;
+      }
+      .azidmart-gradient {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      }
+      .footer-azidmart {
+        background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+        color: white;
+      }
+    </style>
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    <!-- Navbar AZIDMart -->
+    <nav class="navbar navbar-expand-lg navbar-dark azidmart-gradient shadow">
+      <div class="container">
+        <a class="navbar-brand azidmart-brand" href="/"> <i class="bi bi-shop"></i> AZIDMart </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/"> <i class="bi bi-house"></i> Home </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/products"> <i class="bi bi-grid"></i> Produk </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/categories"> <i class="bi bi-tags"></i> Kategori </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/users"> <i class="bi bi-people"></i> Pelanggan </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/about"> <i class="bi bi-info-circle"></i> Tentang </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="py-4">{% block content %} {% endblock %}</main>
+
+    <!-- Footer AZIDMart -->
+    <footer class="footer-azidmart py-4 mt-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h5><i class="bi bi-shop"></i> AZIDMart</h5>
+            <p>Toko serba ada dengan produk berkualitas dan harga terjangkau.</p>
+          </div>
+          <div class="col-md-4">
+            <h5>Kontak</h5>
+            <p>
+              <i class="bi bi-geo-alt"></i> Jl. Inspeksi Kalimalang Tegal Danas Arah Deltamas, Cibatu, Cikarang<br />
+              <i class="bi bi-telephone"></i> (021) 1234-5678<br />
+              <i class="bi bi-envelope"></i> info@azidmart.com
+            </p>
+          </div>
+          <div class="col-md-4">
+            <h5>Tentang Sistem</h5>
+            <p class="mb-0">
+              Sistem Manajemen AZIDMart<br />
+              Dibangun dengan Flask & DummyJSON API<br />
+              &copy; {{ current_year|default('2026') }} - UAS Pemrograman Orientasi Objek
+            </p>
+          </div>
+        </div>
+        <div class="text-center mt-3 pt-3 border-top border-light">
+          <small>Demo untuk tugas UAS Pemrograman Orientasi Objek - Semester Ganjil 2026</small>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

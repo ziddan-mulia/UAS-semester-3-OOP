@@ -1,0 +1,368 @@
+{% extends "base.html" %} {% block title %}About - AZIDMart{% endblock %} {% block extra_css %}
+<style>
+  .about-container {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    min-height: 100vh;
+    padding: 40px 0;
+  }
+
+  .page-title {
+    color: #1e3c72;
+    font-weight: 800;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+  }
+
+  .page-title:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #1e3c72, #2a5298);
+    border-radius: 2px;
+  }
+
+  .info-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 25px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+  }
+
+  .info-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .feature-list {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .feature-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f1f1;
+    display: flex;
+    align-items: center;
+  }
+
+  .feature-list li:last-child {
+    border-bottom: none;
+  }
+
+  .team-member {
+    text-align: center;
+    padding: 25px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 2px solid transparent;
+  }
+
+  .team-member:hover {
+    transform: translateY(-8px);
+    border-color: #1e3c72;
+    box-shadow: 0 15px 30px rgba(30, 60, 114, 0.15);
+  }
+
+  .member-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 2.5rem;
+    color: white;
+  }
+
+  .api-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .tech-icon {
+    font-size: 1.8rem;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+
+  .table-hover tbody tr:hover {
+    background-color: rgba(30, 60, 114, 0.05);
+  }
+
+  @media (max-width: 768px) {
+    .info-card {
+      padding: 20px;
+    }
+
+    .team-member {
+      margin-bottom: 20px;
+    }
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="about-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="text-center mb-5">
+      <h1 class="page-title"><i class="bi bi-info-circle me-2"></i>Tentang AZIDMart</h1>
+      <p class="lead text-muted">Sistem e-commerce modern berbasis Flask dengan integrasi API untuk pengalaman belanja terbaik</p>
+    </div>
+
+    <!-- Project Info -->
+    <div class="info-card">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <h3 class="mb-3">AZIDMart - Flask Edition</h3>
+          <p class="lead mb-4">Platform e-commerce lengkap yang mengintegrasikan DummyJSON API untuk menampilkan produk dengan UI modern dan fitur canggih.</p>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <h5><i class="bi bi-calendar-check text-primary"></i> Informasi Project</h5>
+              <ul class="list-unstyled">
+                <li><strong>Mata Kuliah:</strong> Pemrograman Orientasi Objek</li>
+                <li><strong>Tugas:</strong> UAS - Flask + Public API</li>
+                <li><strong>Tahun:</strong> 2026</li>
+                <li><strong>Semester:</strong> Ganjil</li>
+              </ul>
+            </div>
+            <div class="col-md-6 mb-3">
+              <h5><i class="bi bi-stack text-primary"></i> Tech Stack</h5>
+              <div class="d-flex flex-wrap gap-2 mt-2">
+                <span class="badge bg-primary py-2"><i class="bi bi-filetype-py tech-icon"></i>Python 3.8+</span>
+                <span class="badge bg-success py-2"><i class="bi bi-flower1 tech-icon"></i>Flask 3.0.0</span>
+                <span class="badge bg-info py-2"><i class="bi bi-bootstrap-fill tech-icon"></i>Bootstrap 5.3.0</span>
+                <span class="badge bg-warning py-2"><i class="bi bi-cloud-arrow-down-fill tech-icon"></i>DummyJSON API</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 text-center">
+          <div class="p-4 rounded" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb)">
+            <i class="bi bi-shop-window" style="font-size: 4rem; color: #1e3c72"></i>
+            <h4 class="mt-3">100+ Produk</h4>
+            <p class="text-muted mb-0">Tersedia untuk Anda</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="info-card h-100">
+          <h3 class="mb-4"><i class="bi bi-stars text-warning me-2"></i>Fitur Utama</h3>
+          <ul class="feature-list">
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Dashboard Lengkap</strong> - Statistik real-time</li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Produk Lengkap</strong> - 100+ item dengan detail</li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Kategori Terorganisir</strong> - 6 kategori utama</li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Search & Filter</strong> - Temukan produk cepat</li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Shopping Cart</strong> - Simpan sementara belanja</li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Responsive Design</strong> - Optimal semua device</li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Animasi Modern</strong> - Pengalaman user terbaik</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="info-card h-100">
+          <h3 class="mb-4"><i class="bi bi-lightning-charge text-info me-2"></i>Fitur Teknis</h3>
+          <ul class="feature-list">
+            <li><i class="bi bi-code-square text-primary me-2"></i><strong>Clean Architecture</strong> - Struktur kode rapi</li>
+            <li><i class="bi bi-shield-check text-primary me-2"></i><strong>Error Handling</strong> - Validasi komprehensif</li>
+            <li><i class="bi bi-bolt text-primary me-2"></i><strong>Fast Loading</strong> - Optimasi performa</li>
+            <li><i class="bi bi-palette text-primary me-2"></i><strong>Modern UI/UX</strong> - Desain user-friendly</li>
+            <li><i class="bi bi-phone text-primary me-2"></i><strong>Mobile First</strong> - Prioritas mobile</li>
+            <li><i class="bi bi-browser-chrome text-primary me-2"></i><strong>Cross Browser</strong> - Support semua browser</li>
+            <li><i class="bi bi-git text-primary me-2"></i><strong>Version Control</strong> - Git ready</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Section - CENTERED FOR 2 MEMBERS -->
+    <div class="info-card">
+      <div class="text-center mb-5">
+        <h3><i class="bi bi-people-fill me-2" style="color: #1e3c72"></i>Tim Pengembang</h3>
+        <p class="text-muted">Dibangun oleh tim mahasiswa berdedikasi</p>
+      </div>
+
+      <div class="row justify-content-center">
+        <!-- Changed to center -->
+        <div class="col-md-5 col-lg-4">
+          <!-- Reduced width for better centering -->
+          <div class="team-member">
+            <div class="member-icon">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <h4 class="mb-2">Asep Suhaedi</h4>
+            <p class="text-muted mb-2">NIM: 312410230</p>
+            <div class="mb-3">
+              <span class="badge bg-primary">Fullstack Developer</span>
+              <span class="badge bg-info">UI/UX Designer</span>
+            </div>
+            <p class="small text-muted">Bertanggung jawab pada backend logic, API integration, dan sistem architecture.</p>
+            <div class="mt-3">
+              <i class="bi bi-github me-2"></i>
+              <i class="bi bi-linkedin me-2"></i>
+              <i class="bi bi-envelope"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-5 col-lg-4">
+          <!-- Same width for consistency -->
+          <div class="team-member">
+            <div class="member-icon">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <h4 class="mb-2">Ziddan Mulia Perdana</h4>
+            <p class="text-muted mb-2">NIM: 312410275</p>
+            <div class="mb-3">
+              <span class="badge bg-success">Fullstack Developer</span>
+              <span class="badge bg-warning">Frontend Specialist</span>
+            </div>
+            <p class="small text-muted">Fokus pada frontend development, user interface, dan user experience design.</p>
+            <div class="mt-3">
+              <i class="bi bi-github me-2"></i>
+              <i class="bi bi-linkedin me-2"></i>
+              <i class="bi bi-envelope"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Info -->
+    <div class="info-card">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0"><i class="bi bi-cloud-arrow-up-fill me-2" style="color: #764ba2"></i>DummyJSON API Integration</h3>
+        <span class="api-badge">Powered by DummyJSON</span>
+      </div>
+
+      <p class="mb-4">AZIDMart menggunakan <strong>DummyJSON API</strong> sebagai sumber data utama. DummyJSON adalah REST API gratis yang menyediakan data dummy realistis untuk pengembangan dan testing.</p>
+
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white">
+            <tr>
+              <th>Endpoint</th>
+              <th>Method</th>
+              <th>Deskripsi</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/products</code></td>
+              <td><span class="badge bg-success">GET</span></td>
+              <td>Ambil semua produk</td>
+              <td>
+                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Active</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>/products/{id}</code></td>
+              <td><span class="badge bg-success">GET</span></td>
+              <td>Detail produk by ID</td>
+              <td>
+                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Active</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>/products/categories</code></td>
+              <td><span class="badge bg-success">GET</span></td>
+              <td>Semua kategori</td>
+              <td>
+                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Active</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>/products/category/{name}</code></td>
+              <td><span class="badge bg-success">GET</span></td>
+              <td>Produk by kategori</td>
+              <td>
+                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Active</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>/products/search?q={query}</code></td>
+              <td><span class="badge bg-success">GET</span></td>
+              <td>Search produk</td>
+              <td>
+                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Active</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="text-center mt-4">
+        <a href="https://dummyjson.com" target="_blank" class="btn btn-outline-primary"> <i class="bi bi-box-arrow-up-right me-2"></i>Kunjungi DummyJSON </a>
+      </div>
+    </div>
+
+    <!-- Contact & Footer -->
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="info-card h-100">
+          <h3 class="mb-3"><i class="bi bi-envelope-fill text-primary me-2"></i>Kontak & Support</h3>
+          <div class="mb-3">
+            <h5><i class="bi bi-envelope me-2"></i>Email</h5>
+            <p class="mb-0">
+              <a href="mailto:team@azidmart.dev" class="text-decoration-none">team@azidmart.dev</a>
+            </p>
+          </div>
+          <div class="mb-3">
+            <h5><i class="bi bi-github me-2"></i>GitHub Repository</h5>
+            <p class="mb-0">
+              <a href="https://github.com/Zeppinhere30" target="_blank" class="text-decoration-none">https://github.com/Zeppinhere30</a>
+            </p>
+            <p class="mb-0">
+              <a href="https://github.com/ziddan-mulia" target="_blank" class="text-decoration-none">https://github.com/ziddan-mulia</a>
+            </p>
+          </div>
+          <div>
+            <h5><i class="bi bi-chat-dots me-2"></i>Feedback</h5>
+            <p class="text-muted mb-0">Kami sangat menghargai masukan dan saran untuk pengembangan sistem ini.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="info-card h-100">
+          <h3 class="mb-3"><i class="bi bi-award-fill text-warning me-2"></i>Project Highlights</h3>
+          <ul class="feature-list">
+            <li><i class="bi bi-check2-circle text-success me-2"></i><strong>100% Functional</strong> - Semua fitur bekerja optimal</li>
+            <li><i class="bi bi-check2-circle text-success me-2"></i><strong>Clean Code</strong> - Mudah dipelihara & dikembangkan</li>
+            <li><i class="bi bi-check2-circle text-success me-2"></i><strong>Well Documented</strong> - Dokumentasi lengkap</li>
+            <li><i class="bi bi-check2-circle text-success me-2"></i><strong>Production Ready</strong> - Siap deploy ke server</li>
+            <li><i class="bi bi-check2-circle text-success me-2"></i><strong>Scalable</strong> - Mendukung pengembangan lanjut</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back to Home -->
+    <div class="text-center mt-4">
+      <a href="/" class="btn btn-primary btn-lg px-5"> <i class="bi bi-house-door me-2"></i>Kembali ke Beranda </a>
+      <a href="/products" class="btn btn-outline-primary btn-lg px-5 ms-3"> <i class="bi bi-bag me-2"></i>Jelajahi Produk </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

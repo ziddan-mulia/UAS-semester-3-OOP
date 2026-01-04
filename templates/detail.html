@@ -1,0 +1,477 @@
+{% extends "base.html" %} {% block title %}{{ product.title }} - AZIDMart{% endblock %} {% block extra_css %}
+<style>
+  .product-detail-container {
+    background: #f5f7fa;
+    min-height: calc(100vh - 76px);
+    padding: 30px 0;
+  }
+
+  .product-main-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Image Gallery */
+  .main-image {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+  }
+
+  .main-image:hover {
+    transform: scale(1.02);
+  }
+
+  .thumbnail-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    overflow-x: auto;
+    padding: 10px 0;
+  }
+
+  .thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+  }
+
+  .thumbnail:hover,
+  .thumbnail.active {
+    border-color: #1e3c72;
+    transform: scale(1.1);
+  }
+
+  /* Product Info */
+  .product-info {
+    padding: 30px;
+  }
+
+  .product-category {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+  }
+
+  .product-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  .rating-badge {
+    display: inline-flex;
+    align-items: center;
+    background: #fff3cd;
+    color: #856404;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+
+  /* Price Section */
+  .price-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 25px;
+    border-radius: 15px;
+    margin: 25px 0;
+  }
+
+  .current-price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e3c72;
+    line-height: 1;
+  }
+
+  .original-price {
+    font-size: 1.2rem;
+    color: #6c757d;
+    text-decoration: line-through;
+    margin-left: 10px;
+  }
+
+  .discount-badge {
+    background: #dc3545;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-left: 15px;
+  }
+
+  /* Product Specs */
+  .spec-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .spec-item:last-child {
+    border-bottom: none;
+  }
+
+  .spec-label {
+    color: #6c757d;
+    font-weight: 500;
+  }
+
+  .spec-value {
+    font-weight: 600;
+    color: #333;
+  }
+
+  /* Stock Indicator */
+  .stock-indicator {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .stock-high {
+    background: #d4edda;
+    color: #155724;
+  }
+  .stock-medium {
+    background: #fff3cd;
+    color: #856404;
+  }
+  .stock-low {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  /* Action Buttons */
+  .action-buttons .btn {
+    padding: 15px 30px;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .action-buttons .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Related Products */
+  .related-product-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 1px solid #eee;
+  }
+
+  .related-product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    border-color: #1e3c72;
+  }
+
+  .related-image {
+    height: 180px;
+    object-fit: contain;
+    background: #f8f9fa;
+    padding: 15px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .main-image {
+      height: 300px;
+    }
+
+    .current-price {
+      font-size: 2rem;
+    }
+
+    .product-title {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="product-detail-container">
+  <div class="container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/products">Produk</a></li>
+        <li class="breadcrumb-item"><a href="/products?category={{ product.original_category }}">{{ product.category }}</a></li>
+        <li class="breadcrumb-item active">{{ product.title|truncate(30) }}</li>
+      </ol>
+    </nav>
+
+    <!-- Main Product Card -->
+    <div class="product-main-card">
+      <div class="row g-0">
+        <!-- Left Column: Images -->
+        <div class="col-lg-6">
+          <div class="p-4">
+            <!-- Main Image -->
+            <img id="mainProductImage" src="{{ product.thumbnail }}" alt="{{ product.title }}" class="main-image" onerror="this.src='https://via.placeholder.com/500x400?text=AZIDMart+Product'" />
+
+            <!-- Thumbnails -->
+            {% if product.images and product.images|length > 1 %}
+            <div class="thumbnail-container">
+              <img src="{{ product.thumbnail }}" class="thumbnail active" alt="Thumbnail 1" onclick="changeProductImage(this)" />
+
+              {% for img in product.images[:4] %}
+              <img src="{{ img }}" class="thumbnail" alt="Thumbnail {{ loop.index + 1 }}" onclick="changeProductImage(this)" onerror="this.style.display='none'" />
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Right Column: Product Info -->
+        <div class="col-lg-6">
+          <div class="product-info">
+            <!-- Category & Brand -->
+            <div class="product-category">
+              <span class="badge bg-light text-dark me-2">{{ product.category }}</span>
+              <span class="badge bg-secondary">{{ product.brand }}</span>
+            </div>
+
+            <!-- Title -->
+            <h1 class="product-title">{{ product.title }}</h1>
+
+            <!-- Rating -->
+            <div class="rating-badge">
+              <i class="bi bi-star-fill me-1"></i>
+              {{ product.rating|round(1) }} / 5.0
+              <span class="ms-2 text-muted">({{ (product.rating * 20)|int }} reviews)</span>
+            </div>
+
+            <!-- Description -->
+            <p class="text-muted mb-4">{{ product.description }}</p>
+
+            <!-- Price Section -->
+            <div class="price-section">
+              <div class="d-flex align-items-center flex-wrap mb-3">
+                <span class="current-price"> Rp {{ (product.price_idr)|int|format_currency }} </span>
+
+                {% if product.discountPercentage > 0 %}
+                <span class="original-price"> Rp {{ (product.price_idr / (1 - product.discountPercentage/100))|int|format_currency }} </span>
+                <span class="discount-badge"> Hemat {{ product.discountPercentage|round }}% </span>
+                {% endif %}
+              </div>
+
+              <small class="text-muted">
+                <i class="bi bi-info-circle me-1"></i>
+                Harga sudah termasuk PPN
+              </small>
+            </div>
+
+            <!-- Product Specifications -->
+            <div class="mb-4">
+              <h5 class="mb-3">Spesifikasi Produk</h5>
+              <div class="spec-item">
+                <span class="spec-label">Kategori</span>
+                <span class="spec-value">{{ product.category }}</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-label">Brand</span>
+                <span class="spec-value">{{ product.brand }}</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-label">Garansi</span>
+                <span class="spec-value">{{ product.warranty|default('1 Tahun') }}</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-label">Asal Produk</span>
+                <span class="spec-value">{{ product.origin|default('Indonesia') }}</span>
+              </div>
+            </div>
+
+            <!-- Stock & Actions -->
+            <div class="row align-items-center">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <div class="d-flex align-items-center">
+                  <span class="me-3">Stok:</span>
+                  {% if product.stock > 50 %}
+                  <span class="stock-indicator stock-high">
+                    <i class="bi bi-check-circle me-2"></i>
+                    {{ product.stock }} unit tersedia
+                  </span>
+                  {% elif product.stock > 20 %}
+                  <span class="stock-indicator stock-medium">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    {{ product.stock }} unit tersisa
+                  </span>
+                  {% else %}
+                  <span class="stock-indicator stock-low">
+                    <i class="bi bi-exclamation-circle me-2"></i>
+                    {{ product.stock }} unit terakhir
+                  </span>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="action-buttons">
+                  <button class="btn btn-primary w-100 mb-2" onclick="addToCart({{ product|tojson|safe }})"><i class="bi bi-cart-plus me-2"></i>Tambah ke Keranjang</button>
+                  <button class="btn btn-outline-primary w-100"><i class="bi bi-heart me-2"></i>Simpan ke Wishlist</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    {% if related %}
+    <div class="mt-5">
+      <h3 class="mb-4">Produk Serupa</h3>
+      <div class="row g-4">
+        {% for item in related %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <a href="/product/{{ item.id }}" class="text-decoration-none">
+            <div class="related-product-card">
+              <img src="{{ item.thumbnail }}" alt="{{ item.title }}" class="related-image w-100" onerror="this.src='https://via.placeholder.com/300x200?text=AZIDMart'" />
+              <div class="p-3">
+                <h6 class="mb-2" style="height: 3em; overflow: hidden">{{ item.title }}</h6>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="text-primary fw-bold"> Rp {{ (item.price_idr)|int|format_currency }} </span>
+                  <small class="text-muted">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    {{ item.rating|round(1) }}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  // Change product image when thumbnail clicked
+  function changeProductImage(thumbnail) {
+    const mainImage = document.getElementById('mainProductImage');
+    mainImage.src = thumbnail.src;
+
+    // Update active thumbnail
+    document.querySelectorAll('.thumbnail').forEach((item) => {
+      item.classList.remove('active');
+    });
+    thumbnail.classList.add('active');
+  }
+
+  // Image zoom effect
+  const mainImage = document.getElementById('mainProductImage');
+  if (mainImage) {
+    let isZoomed = false;
+
+    mainImage.addEventListener('click', function () {
+      if (!isZoomed) {
+        this.style.transform = 'scale(1.8)';
+        this.style.cursor = 'zoom-out';
+        this.style.zIndex = '1000';
+        this.style.position = 'relative';
+        isZoomed = true;
+      } else {
+        this.style.transform = 'scale(1)';
+        this.style.cursor = 'zoom-in';
+        this.style.zIndex = '1';
+        isZoomed = false;
+      }
+    });
+  }
+
+  // Add to cart function
+  function addToCart(product) {
+    try {
+      // Get existing cart from localStorage
+      let cart = JSON.parse(localStorage.getItem('azidmart_cart')) || [];
+
+      // Check if product already in cart
+      const existingIndex = cart.findIndex((item) => item.id === product.id);
+
+      if (existingIndex > -1) {
+        // Update quantity
+        cart[existingIndex].quantity += 1;
+      } else {
+        // Add new product
+        product.quantity = 1;
+        cart.push(product);
+      }
+
+      // Save to localStorage
+      localStorage.setItem('azidmart_cart', JSON.stringify(cart));
+
+      // Show success message
+      showNotification('Produk ditambahkan ke keranjang!', 'success');
+
+      // Update cart count in navbar (if exists)
+      updateCartCount();
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      showNotification('Gagal menambahkan ke keranjang', 'error');
+    }
+  }
+
+  // Show notification
+  function showNotification(message, type) {
+    const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+
+    const notification = document.createElement('div');
+    notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+    notification.style.top = '20px';
+    notification.style.right = '20px';
+    notification.style.zIndex = '9999';
+    notification.style.minWidth = '300px';
+    notification.innerHTML = `
+            <strong>${type === 'success' ? 'Sukses!' : 'Error!'}</strong> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+
+    document.body.appendChild(notification);
+
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  }
+
+  // Update cart count in navbar
+  function updateCartCount() {
+    const cartCount = document.getElementById('cartCount');
+    if (cartCount) {
+      const cart = JSON.parse(localStorage.getItem('azidmart_cart')) || [];
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      cartCount.textContent = totalItems;
+    }
+  }
+
+  // Initialize cart count on page load
+  document.addEventListener('DOMContentLoaded', function () {
+    updateCartCount();
+  });
+</script>
+{% endblock %}

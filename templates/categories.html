@@ -1,0 +1,490 @@
+{% extends "base.html" %} {% block title %}Kategori - AZIDMart{% endblock %} {% block extra_css %}
+<style>
+  .categories-container {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e3e9f7 100%);
+    min-height: calc(100vh - 76px);
+    padding: 30px 0;
+  }
+
+  .page-header {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(30, 60, 114, 0.08);
+    border-left: 5px solid #1e3c72;
+  }
+
+  .category-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 25px;
+    border: none;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--cat-color-1), var(--cat-color-2));
+  }
+
+  .category-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(30, 60, 114, 0.15);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .category-icon-container {
+    width: 100px;
+    height: 100px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, var(--cat-color-1), var(--cat-color-2));
+    position: relative;
+    overflow: hidden;
+  }
+
+  .category-icon-container::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+  }
+
+  .category-icon {
+    font-size: 3rem;
+    color: white;
+    z-index: 2;
+    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
+  }
+
+  /* Custom colors and icons for each category */
+  .cat-electronics {
+    --cat-color-1: #2563eb;
+    --cat-color-2: #1e40af;
+  }
+
+  .cat-electronics .category-icon-container {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+  }
+
+  .cat-fashion {
+    --cat-color-1: #ec4899;
+    --cat-color-2: #be185d;
+  }
+
+  .cat-fashion .category-icon-container {
+    background: linear-gradient(135deg, #f472b6, #db2777);
+  }
+
+  .cat-home {
+    --cat-color-1: #f59e0b;
+    --cat-color-2: #d97706;
+  }
+
+  .cat-home .category-icon-container {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  }
+
+  .cat-beauty {
+    --cat-color-1: #10b981;
+    --cat-color-2: #047857;
+  }
+
+  .cat-beauty .category-icon-container {
+    background: linear-gradient(135deg, #34d399, #10b981);
+  }
+
+  .cat-groceries {
+    --cat-color-1: #8b5cf6;
+    --cat-color-2: #7c3aed;
+  }
+
+  .cat-groceries .category-icon-container {
+    background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+  }
+
+  .cat-sports {
+    --cat-color-1: #ef4444;
+    --cat-color-2: #dc2626;
+  }
+
+  .cat-sports .category-icon-container {
+    background: linear-gradient(135deg, #f87171, #ef4444);
+  }
+
+  .category-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .category-count {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e3c72;
+    text-align: center;
+    line-height: 1;
+    margin-bottom: 5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .category-label {
+    font-size: 0.9rem;
+    color: #6b7280;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+
+  .category-desc {
+    font-size: 0.9rem;
+    color: #6b7280;
+    text-align: center;
+    line-height: 1.5;
+    padding: 0 10px;
+    min-height: 4.5em;
+  }
+
+  .category-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    margin-top: 15px;
+  }
+
+  .category-tag {
+    background: #f3f4f6;
+    color: #4b5563;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .view-all-btn {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(30, 60, 114, 0.2);
+  }
+
+  .view-all-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(30, 60, 114, 0.3);
+    color: white;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .page-header {
+      padding: 20px;
+    }
+
+    .category-card {
+      padding: 20px;
+    }
+
+    .category-icon-container {
+      width: 80px;
+      height: 80px;
+    }
+
+    .category-icon {
+      font-size: 2.5rem;
+    }
+
+    .category-count {
+      font-size: 2rem;
+    }
+  }
+
+  /* Efek khusus untuk icon fashion */
+  .cat-fashion .category-icon {
+    transform: rotate(-5deg);
+    animation: fashionPulse 3s infinite alternate;
+  }
+
+  @keyframes fashionPulse {
+    0% {
+      transform: rotate(-5deg) scale(1);
+    }
+    100% {
+      transform: rotate(-5deg) scale(1.05);
+    }
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="categories-container">
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="display-6 mb-3"><i class="bi bi-grid-3x3-gap-fill text-primary me-2"></i>Kategori Produk AZIDMart</h1>
+          <p class="lead text-muted mb-0">Temukan produk terbaik dari {{ categories|length }} kategori yang kami sediakan. Setiap kategori memiliki produk berkualitas dengan harga kompetitif.</p>
+        </div>
+        <div class="col-md-4 text-end">
+          <a href="/products" class="view-all-btn"> <i class="bi bi-basket me-2"></i>Belanja Sekarang </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Categories Grid -->
+    <div class="row g-4">
+      {% for cat in categories %}
+      <div class="col-xl-4 col-lg-4 col-md-6">
+        <a href="/products?category={{ cat.key }}" class="category-card cat-{{ cat.key }}">
+          <div class="category-icon-container">
+            {% if cat.key == 'fashion' %}
+            <!-- Icon khusus untuk fashion - bi-handbag -->
+            <i class="category-icon bi bi-handbag"></i>
+            {% else %}
+            <i class="category-icon bi {{ cat.icon }}"></i>
+            {% endif %}
+          </div>
+
+          <!-- Category Name -->
+          <h3 class="category-name">{{ cat.name }}</h3>
+
+          <!-- Product Count -->
+          <div class="category-count">{{ cat.total }}</div>
+          <div class="category-label">Produk Tersedia</div>
+
+          <!-- Category Description -->
+          <p class="category-desc">
+            {% if cat.key == 'electronics' %} Teknologi terbaru dengan garansi resmi. Smartphone, laptop, gadget, dan aksesoris elektronik lengkap. {% elif cat.key == 'fashion' %} Tren fashion terkini untuk semua usia. Pakaian, sepatu, tas,
+            dan aksesoris fashion premium. {% elif cat.key == 'home' %} Buat rumah lebih nyaman dengan furniture dan dekorasi terbaik. Kualitas premium, harga terjangkau. {% elif cat.key == 'beauty' %} Produk kecantikan dan skincare
+            terpercaya. Dari makeup hingga perawatan wajah yang aman. {% elif cat.key == 'groceries' %} Bahan makanan segar dan berkualitas. Sayuran, buah-buahan, kebutuhan dapur sehari-hari. {% elif cat.key == 'sports' %} Perlengkapan
+            olahraga lengkap untuk semua jenis aktivitas. Dari fitness hingga outdoor adventure. {% else %} Koleksi produk terbaik dari AZIDMart dengan kualitas terjamin. {% endif %}
+          </p>
+
+          <!-- Category Tags -->
+          <div class="category-tags">
+            {% if cat.key == 'electronics' %}
+            <span class="category-tag">Smartphone</span>
+            <span class="category-tag">Laptop</span>
+            <span class="category-tag">Gadget</span>
+            <span class="category-tag">Aksesoris</span>
+            {% elif cat.key == 'fashion' %}
+            <span class="category-tag">Pakaian</span>
+            <span class="category-tag">Sepatu</span>
+            <span class="category-tag">Tas</span>
+            <span class="category-tag">Aksesoris</span>
+            {% elif cat.key == 'home' %}
+            <span class="category-tag">Furniture</span>
+            <span class="category-tag">Dekorasi</span>
+            <span class="category-tag">Peralatan</span>
+            <span class="category-tag">Elektronik</span>
+            {% elif cat.key == 'beauty' %}
+            <span class="category-tag">Skincare</span>
+            <span class="category-tag">Makeup</span>
+            <span class="category-tag">Perawatan</span>
+            <span class="category-tag">Kecantikan</span>
+            {% elif cat.key == 'groceries' %}
+            <span class="category-tag">Makanan</span>
+            <span class="category-tag">Minuman</span>
+            <span class="category-tag">Sayuran</span>
+            <span class="category-tag">Buah</span>
+            {% elif cat.key == 'sports' %}
+            <span class="category-tag">Fitness</span>
+            <span class="category-tag">Outdoor</span>
+            <span class="category-tag">Sepeda</span>
+            <span class="category-tag">Alat</span>
+            {% endif %}
+          </div>
+
+          <!-- View Button -->
+          <div class="text-center mt-4">
+            <span class="badge" style="background: var(--cat-color-1); color: white"> <i class="bi bi-arrow-right me-1"></i>Jelajahi {{ cat.total }} Produk </span>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Stats Summary -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title mb-4 text-center"><i class="bi bi-graph-up text-primary me-2"></i>Ringkasan Kategori</h5>
+            <div class="row text-center">
+              <div class="col-md-3 mb-3">
+                <div class="p-3 rounded" style="background: linear-gradient(135deg, #dbeafe, #eff6ff)">
+                  <h3 class="text-primary mb-1">{{ categories|sum(attribute='total') }}</h3>
+                  <p class="text-muted mb-0"><i class="bi bi-box-seam me-1"></i>Total Produk</p>
+                </div>
+              </div>
+              <div class="col-md-3 mb-3">
+                <div class="p-3 rounded" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7)">
+                  <h3 class="text-success mb-1">{{ categories|length }}</h3>
+                  <p class="text-muted mb-0"><i class="bi bi-tags me-1"></i>Jumlah Kategori</p>
+                </div>
+              </div>
+              <div class="col-md-3 mb-3">
+                <div class="p-3 rounded" style="background: linear-gradient(135deg, #fef3c7, #fef9c3)">
+                  <h3 class="text-warning mb-1">{{ (categories|sum(attribute='total') / categories|length)|round|int }}</h3>
+                  <p class="text-muted mb-0"><i class="bi bi-calculator me-1"></i>Rata-rata Produk</p>
+                </div>
+              </div>
+              <div class="col-md-3 mb-3">
+                <div class="p-3 rounded" style="background: linear-gradient(135deg, #e0f2fe, #bae6fd)">
+                  <h3 class="text-info mb-1">100%</h3>
+                  <p class="text-muted mb-0"><i class="bi bi-shield-check me-1"></i>Kualitas Terjamin</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center mt-5 pt-4">
+      <h4 class="mb-3">Temukan Produk yang Cocok untuk Anda</h4>
+      <p class="text-muted mb-4">Gunakan fitur pencarian atau jelajahi berdasarkan kategori untuk menemukan produk terbaik.</p>
+      <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="/products" class="btn btn-primary btn-lg px-5"> <i class="bi bi-basket me-2"></i>Lihat Semua Produk </a>
+        <a href="/" class="btn btn-outline-primary btn-lg px-5"> <i class="bi bi-house me-2"></i>Kembali ke Beranda </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  // Animasi untuk category cards dengan efek yang lebih menarik
+  document.addEventListener('DOMContentLoaded', function () {
+    const categoryCards = document.querySelectorAll('.category-card');
+
+    categoryCards.forEach((card, index) => {
+      // Set initial state
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.9) translateY(20px)';
+
+      // Animate in sequence with delay
+      setTimeout(() => {
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        card.style.opacity = '1';
+        card.style.transform = 'scale(1) translateY(0)';
+      }, index * 150);
+
+      // Add hover effect
+      card.addEventListener('mouseenter', function () {
+        this.style.zIndex = '10';
+        this.style.transform = 'translateY(-15px) scale(1.02)';
+      });
+
+      card.addEventListener('mouseleave', function () {
+        this.style.zIndex = '1';
+        this.style.transform = 'translateY(0) scale(1)';
+      });
+    });
+
+    // Animate numbers with counting effect
+    const categoryCounts = document.querySelectorAll('.category-count');
+    categoryCounts.forEach((element) => {
+      const finalValue = parseInt(element.textContent);
+
+      // If it's a number, animate it
+      if (!isNaN(finalValue)) {
+        element.textContent = '0';
+
+        let current = 0;
+        const duration = 2000;
+        const increment = finalValue / (duration / 16);
+
+        const counter = setInterval(() => {
+          current += increment;
+
+          if (current >= finalValue) {
+            element.textContent = finalValue.toLocaleString('id-ID');
+            clearInterval(counter);
+          } else {
+            element.textContent = Math.floor(current).toLocaleString('id-ID');
+          }
+        }, 16);
+      }
+    });
+
+    // Add click effect to cards
+    categoryCards.forEach((card) => {
+      card.addEventListener('click', function (e) {
+        // Add ripple effect
+        const ripple = document.createElement('span');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+
+        ripple.style.cssText = `
+          position: absolute;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.5);
+          transform: scale(0);
+          animation: ripple 0.6s linear;
+          width: ${size}px;
+          height: ${size}px;
+          top: ${y}px;
+          left: ${x}px;
+          pointer-events: none;
+          z-index: 5;
+        `;
+
+        this.appendChild(ripple);
+
+        // Remove ripple after animation
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    });
+  });
+
+  // Add CSS for ripple animation
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+</script>
+{% endblock %}

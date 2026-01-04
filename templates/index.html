@@ -1,0 +1,490 @@
+{% extends "base.html" %} {% block title %}Dashboard - AZIDMart{% endblock %} {% block extra_css %}
+<style>
+  /* Modern Dashboard Style */
+  :root {
+    --azid-primary: #1e3c72;
+    --azid-secondary: #2a5298;
+    --azid-light: #f8f9fa;
+    --azid-success: #28a745;
+    --azid-warning: #ffc107;
+    --azid-info: #17a2b8;
+  }
+
+  .dashboard-container {
+    background: #f5f7fa;
+    min-height: calc(100vh - 76px);
+    padding: 30px 0;
+  }
+
+  /* Welcome Card */
+  .welcome-card {
+    background: linear-gradient(135deg, var(--azid-primary) 0%, var(--azid-secondary) 100%);
+    border-radius: 20px;
+    color: white;
+    padding: 40px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .welcome-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+  }
+
+  .welcome-card::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -30%;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+  }
+
+  /* Stat Cards */
+  .stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 25px;
+    border: none;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+
+  .stat-icon.products {
+    background: rgba(30, 60, 114, 0.1);
+    color: var(--azid-primary);
+  }
+  .stat-icon.stock {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--azid-success);
+  }
+  .stat-icon.categories {
+    background: rgba(255, 193, 7, 0.1);
+    color: var(--azid-warning);
+  }
+  .stat-icon.value {
+    background: rgba(23, 162, 184, 0.1);
+    color: var(--azid-info);
+  }
+
+  .stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .stat-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+
+  /* Quick Actions */
+  .quick-actions {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-top: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 10px;
+    background: var(--azid-light);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .action-btn:hover {
+    background: white;
+    border-color: var(--azid-primary);
+    transform: translateX(5px);
+  }
+
+  .action-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 18px;
+  }
+
+  .action-icon.products {
+    background: var(--azid-primary);
+    color: white;
+  }
+  .action-icon.categories {
+    background: var(--azid-success);
+    color: white;
+  }
+  .action-icon.users {
+    background: var(--azid-warning);
+    color: white;
+  }
+  .action-icon.about {
+    background: var(--azid-info);
+    color: white;
+  }
+
+  /* Recent Activity */
+  .activity-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-top: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .activity-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .activity-item:last-child {
+    border-bottom: none;
+  }
+
+  .activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    background: var(--azid-light);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .welcome-card {
+      padding: 25px;
+    }
+
+    .stat-card {
+      margin-bottom: 15px;
+    }
+
+    .stat-number {
+      font-size: 1.8rem;
+    }
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="dashboard-container">
+  <div class="container">
+    <!-- Welcome Card -->
+    <div class="welcome-card position-relative">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="display-6 mb-3"><i class="bi bi-shop me-2"></i>Selamat Datang di AZIDMart</h1>
+          <p class="mb-4 opacity-75">Sistem Manajemen Toko Serba Ada. Kelola produk, kategori, dan pelanggan dengan mudah.</p>
+          <a href="/products" class="btn btn-light"> <i class="bi bi-arrow-right-circle me-2"></i>Mulai Kelola Produk </a>
+        </div>
+        <div class="col-md-4 text-center d-none d-md-block">
+          <i class="bi bi-graph-up-arrow" style="font-size: 6rem; opacity: 0.2"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics Row -->
+    <div class="row g-4">
+      <!-- Total Products -->
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+          <div class="stat-icon products">
+            <i class="bi bi-box-seam"></i>
+          </div>
+          <h3 class="stat-number">{{ stats.total_products }}</h3>
+          <p class="stat-label">Total Produk</p>
+          <small class="text-muted">Jumlah produk di inventori</small>
+        </div>
+      </div>
+
+      <!-- Total Stock -->
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+          <div class="stat-icon stock">
+            <i class="bi bi-boxes"></i>
+          </div>
+          <h3 class="stat-number">{{ "{:,.0f}".format(stats.total_stock) }}</h3>
+          <p class="stat-label">Total Stok</p>
+          <small class="text-muted">Unit produk tersedia</small>
+        </div>
+      </div>
+
+      <!-- Total Categories -->
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+          <div class="stat-icon categories">
+            <i class="bi bi-tags"></i>
+          </div>
+          <h3 class="stat-number">{{ stats.total_categories }}</h3>
+          <p class="stat-label">Kategori</p>
+          <small class="text-muted">Jenis kategori produk</small>
+        </div>
+      </div>
+
+      <!-- Inventory Value -->
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+          <div class="stat-icon value">
+            <i class="bi bi-cash-stack"></i>
+          </div>
+          <h3 class="stat-number">Rp {{ "{:,.0f}".format(stats.total_value|default(0)) }}</h3>
+          <p class="stat-label">Nilai Inventori</p>
+          <small class="text-muted">Total nilai stok</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Row -->
+    <div class="row mt-4">
+      <!-- Left Column: Quick Actions -->
+      <div class="col-lg-4">
+        <div class="quick-actions">
+          <h5 class="mb-4"><i class="bi bi-lightning me-2"></i>Aksi Cepat</h5>
+
+          <a href="/products" class="action-btn">
+            <div class="action-icon products">
+              <i class="bi bi-grid"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">Kelola Produk</h6>
+              <small class="text-muted">Tambah, edit, hapus produk</small>
+            </div>
+            <i class="bi bi-chevron-right ms-auto"></i>
+          </a>
+
+          <a href="/categories" class="action-btn">
+            <div class="action-icon categories">
+              <i class="bi bi-tags"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">Kelola Kategori</h6>
+              <small class="text-muted">Atur kategori produk</small>
+            </div>
+            <i class="bi bi-chevron-right ms-auto"></i>
+          </a>
+
+          <a href="/users" class="action-btn">
+            <div class="action-icon users">
+              <i class="bi bi-people"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">Data Pelanggan</h6>
+              <small class="text-muted">Lihat data pelanggan</small>
+            </div>
+            <i class="bi bi-chevron-right ms-auto"></i>
+          </a>
+
+          <a href="/about" class="action-btn">
+            <div class="action-icon about">
+              <i class="bi bi-info-circle"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">Tentang Sistem</h6>
+              <small class="text-muted">Info sistem & teknologi</small>
+            </div>
+            <i class="bi bi-chevron-right ms-auto"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: Recent Activity & Info -->
+      <div class="col-lg-8">
+        <!-- Recent Activity -->
+        <div class="activity-card">
+          <h5 class="mb-4"><i class="bi bi-clock-history me-2"></i>Aktivitas Terbaru</h5>
+
+          <div class="activity-item">
+            <div class="activity-icon text-primary">
+              <i class="bi bi-database"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">Sistem Terhubung ke API</h6>
+              <small class="text-muted">Data produk diambil dari DummyJSON API</small>
+            </div>
+            <span class="badge bg-light text-dark ms-auto">Baru</span>
+          </div>
+
+          <div class="activity-item">
+            <div class="activity-icon text-success">
+              <i class="bi bi-check-circle"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">{{ stats.total_products }} Produk Dimuat</h6>
+              <small class="text-muted">Produk berhasil di-load ke sistem</small>
+            </div>
+          </div>
+
+          <div class="activity-item">
+            <div class="activity-icon text-warning">
+              <i class="bi bi-arrow-repeat"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">Data Diperbarui Otomatis</h6>
+              <small class="text-muted">Data produk diperbarui real-time</small>
+            </div>
+          </div>
+
+          <div class="activity-item">
+            <div class="activity-icon text-info">
+              <i class="bi bi-shield-check"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">Sistem Berjalan Normal</h6>
+              <small class="text-muted">Semua fitur berfungsi dengan baik</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Info -->
+        <div class="activity-card mt-4">
+          <h5 class="mb-4"><i class="bi bi-cpu me-2"></i>Informasi Sistem</h5>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-flask text-primary me-3" style="font-size: 1.5rem"></i>
+                <div>
+                  <h6 class="mb-1">Backend Framework</h6>
+                  <p class="text-muted mb-0">Flask (Python)</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-cloud text-success me-3" style="font-size: 1.5rem"></i>
+                <div>
+                  <h6 class="mb-1">Data Source</h6>
+                  <p class="text-muted mb-0">DummyJSON API</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-bootstrap text-purple me-3" style="font-size: 1.5rem"></i>
+                <div>
+                  <h6 class="mb-1">Frontend</h6>
+                  <p class="text-muted mb-0">Bootstrap 5 + CSS3</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-database text-warning me-3" style="font-size: 1.5rem"></i>
+                <div>
+                  <h6 class="mb-1">Data</h6>
+                  <p class="text-muted mb-0">{{ stats.total_products }} Produk</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  // Animasi angka statistik dengan efek yang lebih smooth
+  document.addEventListener('DOMContentLoaded', function () {
+    const statNumbers = document.querySelectorAll('.stat-number');
+
+    statNumbers.forEach((element) => {
+      const originalText = element.textContent;
+      const isCurrency = originalText.includes('Rp');
+
+      // Extract numeric value
+      let numericValue = parseFloat(originalText.replace(/[^0-9.-]+/g, ''));
+
+      // If not a valid number, skip animation
+      if (isNaN(numericValue)) return;
+
+      // Reset to 0 for animation
+      if (isCurrency) {
+        element.textContent = 'Rp 0';
+      } else {
+        element.textContent = '0';
+      }
+
+      // Animate counting
+      let current = 0;
+      const increment = numericValue / 60; // Complete in 1 second (60 frames)
+      const interval = 1000 / 60; // 60fps
+
+      const counter = setInterval(() => {
+        current += increment;
+
+        if (current >= numericValue) {
+          current = numericValue;
+          clearInterval(counter);
+        }
+
+        if (isCurrency) {
+          element.textContent = 'Rp ' + Math.floor(current).toLocaleString('id-ID');
+        } else {
+          element.textContent = Math.floor(current).toLocaleString('id-ID');
+        }
+      }, interval);
+    });
+
+    // Add hover effects to action buttons
+    const actionButtons = document.querySelectorAll('.action-btn');
+    actionButtons.forEach((button) => {
+      button.addEventListener('mouseenter', function () {
+        this.style.transform = 'translateX(5px)';
+      });
+
+      button.addEventListener('mouseleave', function () {
+        this.style.transform = 'translateX(0)';
+      });
+    });
+  });
+</script>
+{% endblock %}

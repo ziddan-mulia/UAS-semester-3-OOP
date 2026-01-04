@@ -1,0 +1,371 @@
+{% extends "base.html" %} {% block title %}Produk - AZIDMart{% endblock %} {% block extra_css %}
+<style>
+  .products-container {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e3e9f7 100%);
+    min-height: calc(100vh - 76px);
+    padding: 30px 0;
+  }
+
+  .product-card {
+    height: 100%;
+    transition: all 0.3s ease;
+    border: none;
+    overflow: hidden;
+    border-radius: 15px;
+    border: 1px solid #eef2ff;
+    background: white;
+  }
+
+  .product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(30, 60, 114, 0.15);
+    border-color: #1e3c72;
+  }
+
+  .product-image {
+    height: 200px;
+    object-fit: contain;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    transition: transform 0.3s ease;
+  }
+
+  .product-card:hover .product-image {
+    transform: scale(1.1);
+  }
+
+  .product-title {
+    height: 3em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .price-tag {
+    font-size: 1.4rem;
+    color: #1e3c72;
+    font-weight: bold;
+  }
+
+  .filter-section {
+    background: white;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    border-left: 5px solid #1e3c72;
+  }
+
+  .category-badge {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 50px;
+    font-weight: 500;
+  }
+
+  .category-badge:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .rating {
+    color: #ffc107;
+  }
+
+  .category-chip {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    color: #495057;
+  }
+
+  .category-chip:hover,
+  .category-chip.active {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    border-color: #1e3c72;
+  }
+
+  .discount-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .btn-product-action {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border: none;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    color: white; /* TEKS PUTIH */
+  }
+
+  .btn-product-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3);
+    background: linear-gradient(135deg, #2a5298 0%, #3b6fdb 100%);
+    color: white; /* Pastikan hover tetap putih */
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="products-container">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-md-12">
+        <h1 class="display-6 mb-2"><i class="bi bi-grid text-primary me-2"></i>Katalog Produk AZIDMart</h1>
+        <p class="text-muted">Temukan {{ products|length }} produk elektronik, fashion, dan kebutuhan rumah tangga terbaik.</p>
+      </div>
+    </div>
+
+    <!-- Filter & Search Section -->
+    <div class="filter-section">
+      <div class="row align-items-center">
+        <!-- Search -->
+        <div class="col-md-6 mb-3">
+          <form method="GET" action="/products" class="d-flex gap-2">
+            <input
+              type="text"
+              name="search"
+              class="form-control form-control-lg"
+              placeholder="Cari produk di AZIDMart..."
+              value="{{ search_query }}"
+              {%
+              if
+              current_category
+              !="all"
+              %}
+              onchange="this.form.elements['category'].value='{{ current_category }}'"
+              {%
+              endif
+              %}
+            />
+            {% if current_category != 'all' %}
+            <input type="hidden" name="category" value="{{ current_category }}" />
+            {% endif %}
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="bi bi-search"></i>
+            </button>
+          </form>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="col-md-6 mb-3">
+          <div class="d-flex gap-2 flex-wrap">
+            <a href="/products" class="btn btn-sm category-badge category-chip {% if current_category == 'all' %}active{% endif %}"> <i class="bi bi-grid me-1"></i>Semua Produk </a>
+            {% for key, name in categories.items() %}
+            <a href="/products?category={{ key }}" class="btn btn-sm category-badge category-chip {% if current_category == key %}active{% endif %}">
+              <i
+                class="bi {{ 
+                'phone' if key == 'electronics' 
+                else 'tshirt' if key == 'fashion'
+                else 'house' if key == 'home'
+                else 'heart' if key == 'beauty'
+                else 'basket' if key == 'groceries'
+                else 'bicycle' if key == 'sports'
+                else 'box'
+              }} me-1"
+              ></i>
+              {{ name }}
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Info -->
+      {% if current_category != 'all' or search_query %}
+      <div class="row mt-3">
+        <div class="col-12">
+          <div class="alert alert-light border">
+            <i class="bi bi-funnel me-2"></i>
+            <strong>Filter aktif:</strong>
+            {% if current_category != 'all' %}
+            <span class="badge bg-primary ms-2">Kategori: {{ categories[current_category] }}</span>
+            {% endif %} {% if search_query %}
+            <span class="badge bg-info ms-2">Pencarian: "{{ search_query }}"</span>
+            {% endif %}
+            <a href="/products" class="btn btn-sm btn-outline-danger ms-3"> <i class="bi bi-x-circle me-1"></i>Hapus Filter </a>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Products Grid -->
+    <div class="row g-4">
+      {% if products %} {% for product in products %}
+      <div class="col-xl-3 col-lg-4 col-md-6">
+        <div class="card product-card shadow-sm">
+          <div class="position-relative overflow-hidden">
+            <img src="{{ product.thumbnail }}" class="card-img-top product-image" alt="{{ product.title }}" onerror="this.src='https://via.placeholder.com/300x200?text=AZIDMart'" />
+
+            <!-- Discount Badge -->
+            {% if product.discountPercentage > 0 %}
+            <div class="discount-badge">-{{ product.discountPercentage|round }}%</div>
+            {% endif %}
+          </div>
+
+          <div class="card-body">
+            <!-- Category Badge -->
+            <span class="badge bg-light text-dark mb-2">
+              <i
+                class="bi {{ 
+                  'phone' if product.category == 'electronics' 
+                  else 'tshirt' if product.category == 'fashion'
+                  else 'house' if product.category == 'home'
+                  else 'heart' if product.category == 'beauty'
+                  else 'basket' if product.category == 'groceries'
+                  else 'bicycle' if product.category == 'sports'
+                  else 'box'
+                }} me-1"
+              ></i>
+              {{ product.category|capitalize }}
+            </span>
+
+            <!-- Title -->
+            <h5 class="card-title product-title">{{ product.title }}</h5>
+
+            <!-- Rating -->
+            <div class="rating mb-2">
+              {% for i in range(5) %} {% if i < product.rating|round|int %}
+              <i class="bi bi-star-fill"></i>
+              {% else %}
+              <i class="bi bi-star"></i>
+              {% endif %} {% endfor %}
+              <small class="text-muted ms-2">{{ product.rating|round(1) }}/5.0</small>
+            </div>
+
+            <!-- Price -->
+            <div class="mb-3">
+              <p class="price-tag mb-1">Rp {{ product.price_idr|int|format_currency }}</p>
+              {% if product.discountPercentage > 0 %}
+              <small class="text-muted">
+                <s>Rp {{ (product.price_idr / (1 - product.discountPercentage/100))|int|format_currency }}</s>
+                <span class="badge bg-danger ms-2">Hemat {{ product.discountPercentage|round }}%</span>
+              </small>
+              {% endif %}
+            </div>
+
+            <!-- Stock Info -->
+            <div class="mb-3">
+              <small class="text-muted"> <i class="bi bi-box me-1"></i>Stok: {{ product.stock }} </small>
+            </div>
+
+            <!-- HANYA SATU TOMBOL DENGAN TEKS PUTIH -->
+            <div class="d-grid">
+              <a href="/product/{{ product.id }}" class="btn btn-product-action text-white"> <i class="bi bi-eye me-1"></i>Lihat Detail Produk </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %} {% else %}
+      <!-- No Products Found -->
+      <div class="col-12">
+        <div class="text-center py-5">
+          <div class="mb-4">
+            <i class="bi bi-search" style="font-size: 4rem; color: #dee2e6"></i>
+          </div>
+          <h3 class="mb-3">Produk Tidak Ditemukan</h3>
+          <p class="text-muted mb-4">
+            Tidak ada produk yang sesuai dengan pencarian Anda. {% if current_category != 'all' %}
+            <br />Coba cari di kategori lain atau gunakan kata kunci berbeda. {% endif %}
+          </p>
+          <a href="/products" class="btn btn-primary text-white"> <i class="bi bi-arrow-clockwise me-2"></i>Tampilkan Semua Produk </a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- API Info Section -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-md-2 text-center">
+                <i class="bi bi-cloud-arrow-down" style="font-size: 3rem; color: #1e3c72"></i>
+              </div>
+              <div class="col-md-8">
+                <h5><i class="bi bi-info-circle me-2"></i>Informasi Sistem</h5>
+                <p class="mb-0">
+                  Data produk diambil secara real-time dari
+                  <strong><a href="https://dummyjson.com" target="_blank">DummyJSON API</a></strong>
+                  menggunakan Python Flask. Harga sudah dikonversi ke Rupiah dengan kurs 1 USD = Rp 15.000.
+                </p>
+              </div>
+              <div class="col-md-2 text-center">
+                <span class="badge bg-primary py-2 px-3 text-white"> <i class="bi bi-database me-1"></i>{{ products|length }} Produk </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  // Function untuk notifikasi
+  function showNotification(message, type) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
+    notification.style.top = '20px';
+    notification.style.right = '20px';
+    notification.style.zIndex = '9999';
+    notification.style.minWidth = '300px';
+
+    notification.innerHTML = `
+      <div class="d-flex align-items-center">
+        <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-circle'}-fill me-2 fs-5"></i>
+        <div>
+          <strong class="me-2">${type === 'success' ? 'Sukses!' : 'Error!'}</strong>
+          ${message}
+        </div>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+      </div>
+    `;
+
+    document.body.appendChild(notification);
+
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.remove();
+      }
+    }, 3000);
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', function () {
+    // Add hover effect to product cards
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach((card) => {
+      card.addEventListener('mouseenter', function () {
+        this.style.zIndex = '10';
+      });
+
+      card.addEventListener('mouseleave', function () {
+        this.style.zIndex = '1';
+      });
+    });
+
+    // Show welcome message for first time visitors
+    if (!localStorage.getItem('azidmart_welcome_shown')) {
+      setTimeout(() => {
+        showNotification('Selamat datang di AZIDMart! Telusuri produk terbaik kami.', 'success');
+        localStorage.setItem('azidmart_welcome_shown', 'true');
+      }, 1000);
+    }
+  });
+</script>
+{% endblock %}
